@@ -12,20 +12,21 @@
 int client_handshake(int *buffsize) {
   char message[MESSAGE_BUFFER_SIZE];
   int pid = getpid();
-
+  char *pidstr = itoa(pid);
   //3 creates private fifo
   //4 open public fifo and write private pid
-  mkfifo(pid, 0644);
+  mkfifo(pidstr, 0644);
   int wkd = open("fifo", O_WRONLY);
-  write(wkd, *pid, 7);
+  write(wkd, pidstr, 7);
 
   //5 opens private pipe to block
-  open(itoa(pid), O_RDONLY);
+  int pipeid = open(pidstr, O_RDONLY);
 
   //reads confirmation from server and removes FIFO
-
-  //sends confirmation
-
+  char *buff;
+  read(pipeid, buff, 100);
+  printf("received: %s\n", buff);
+  
 
   return *buffsize;
 }
@@ -35,7 +36,7 @@ int server_handshake(int *buffsize) {
   //1 & 2
   //makes well known pipe and opens
   mkfifo("fifo", 0644);
-  printf("[SERVER]: fifo created")
+  printf("[SERVER]: fifo created");
 
   int fd = open("fifo", O_RDONLY);
 

@@ -1,0 +1,5 @@
+server: server.c pipe_networking.h
+	gcc -o client.c pipe_networking.h
+
+client: client.c pipe_networking.h
+	gcc -o client.c pipe_networking.h
